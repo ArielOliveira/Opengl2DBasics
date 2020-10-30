@@ -2,7 +2,6 @@
 
 Object::Object(float const& verts, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
 	instances++;
-	*this->verts = verts;
 	this->transform = transform;
 	this->position = position;
 	this->rotation = rotation;
@@ -12,7 +11,6 @@ Object::Object(float const& verts, glm::mat4 const& transform, glm::mat4 const& 
 
 Object::Object(Object const& object) {
 	instances++;
-	this->verts = object.verts;
 	transform = object.transform;
 	position = object.position;
 	rotation = object.rotation;
@@ -24,7 +22,6 @@ Object::~Object() {
 	instances--;
 }
 
-float* Object::GetVertices() { return verts; }
 void Object::Translate(glm::vec3 const& translation) {
 	position = glm::translate(glm::mat4(1.f), translation);
 	transform = transform * position;

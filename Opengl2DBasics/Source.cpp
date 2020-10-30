@@ -59,14 +59,14 @@ int main(void)
 
     glUseProgram(shader);
 
-    /*float verts[8] = {
+    float verts[8] = {
         -.5f, -.5f,
          .5f, -.5f,
          .5f,  .5f,
         -.5f,  .5f
-    };*/
+    };
 
-    //Square *square = new Square(*verts, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
+    Square *square = new Square(*verts, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
 
     unsigned buffer;
     // Gera um objeto de buffer
@@ -77,9 +77,6 @@ int main(void)
 
     // Determina o tipo, tamanho, ponteiro e padrao de armazenamento respectivamente
     glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
-
-    
-   
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

@@ -5,8 +5,6 @@
 
 class Object {
 	private:
-		float *verts;
-
 		glm::mat4 transform;
 
 		glm::mat4 position;
@@ -24,7 +22,7 @@ class Object {
 
 		~Object();
 
-		float* GetVertices();
+		virtual float GetVertices() = 0;
 
 		void Translate(glm::vec3 const& translation);
 		
