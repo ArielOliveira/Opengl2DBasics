@@ -22,7 +22,9 @@ class Object {
 
 		~Object();
 
-		virtual float GetVertices() = 0;
+		virtual float* GetVertices() = 0;
+
+		virtual unsigned int* GetIndices() = 0;
 
 		void Translate(glm::vec3 const& translation);
 		

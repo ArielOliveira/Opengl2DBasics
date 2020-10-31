@@ -48,35 +48,48 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    unsigned shader = CriarShader(vertexShader, fragmentShader);
+
+    ShaderProgramSource source = ParseShader("Shader.shader");
+    unsigned shader = CriarShader(source.VertexSource, source.FragmentSource);
+    glUseProgram(shader);
+
+    glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position");  // Associa um número a um atributo no vertex shader
+    unsigned movimento = glGetUniformLocation(shader, "movimento"); // Retorna o valor unsigned int de um uniform
+   
     
     if (!shader)
         return -1;
 
-    // Associa um número a um atributo no vertex shader
-    glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position");
-    unsigned movimento = glGetUniformLocation(shader, "modelo");
-
-    glUseProgram(shader);
-
-    float verts[8] = {
+    float verts[] = {
         -.5f, -.5f,
          .5f, -.5f,
          .5f,  .5f,
         -.5f,  .5f
     };
 
-    Square *square = new Square(*verts, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
+    unsigned int indices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    Square *square = new Square(*indices, *verts, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
 
     unsigned buffer;
-    // Gera um objeto de buffer
-    glGenBuffers(1, &buffer);
+    glGenBuffers(1, &buffer); // Gera um objeto de buffer
+    glBindBuffer(GL_ARRAY_BUFFER, buffer); // Determina o tipo do objeto de buffer
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), verts, GL_STATIC_DRAW); // Determina o tipo, tamanho, ponteiro e padrao de armazenamento respectivamente
+    
+    glEnableVertexAttribArray(VERTEX_SHADER_POSITION); // Habilita o atributo a ser usado na chamada do metodo draw
+    glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // Define uma array a ser usada no attributo do vertex shader
 
-    // Determina o tipo do objeto de buffer
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    unsigned ibo;
 
-    // Determina o tipo, tamanho, ponteiro e padrao de armazenamento respectivamente
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+    mat4 move(1.f);
+    
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -84,19 +97,10 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Determina o tipo do objeto de buffer
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-        // Habilita o atributo a ser usado na chamada do metodo draw
-        glEnableVertexAttribArray(VERTEX_SHADER_POSITION);
-
-        // Define uma array a ser usada no attributo do vertex shader
-        glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        translation[3] += 0.2f;
-        glUniformMatrix4fv(movimento, 1, GL_FALSE, translation);
+        move = glm::translate(move, glm::vec3(.00001f, .0f, .0f));
+        glUniformMatrix4fv(movimento, 1, GL_FALSE, glm::value_ptr(move));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

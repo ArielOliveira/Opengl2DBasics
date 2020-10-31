@@ -28,6 +28,9 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Square.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader.shader" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
