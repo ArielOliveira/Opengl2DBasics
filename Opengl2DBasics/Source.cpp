@@ -54,7 +54,7 @@ int main(void)
     glUseProgram(shader);
 
     glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position");  // Associa um número a um atributo no vertex shader
-    unsigned movimento = glGetUniformLocation(shader, "movimento"); // Retorna o valor unsigned int de um uniform
+    //unsigned movimento = glGetUniformLocation(shader, "movimento"); // Retorna o valor unsigned int de um uniform
    
     
     if (!shader)
@@ -72,12 +72,11 @@ int main(void)
         2, 3, 0
     };
 
-    Square *square = new Square(*indices, *verts, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
+    Square *square = new Square(verts, indices, mat4(1.f), mat4(1.f), mat4(1.f), mat4(1.f));
 
-    unsigned buffer;
-    glGenBuffers(1, &buffer); // Gera um objeto de buffer
-    glBindBuffer(GL_ARRAY_BUFFER, buffer); // Determina o tipo do objeto de buffer
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), verts, GL_STATIC_DRAW); // Determina o tipo, tamanho, ponteiro e padrao de armazenamento respectivamente
+    glGenBuffers(1, square->GetVertexPtr()); // Gera um objeto de buffer
+    glBindBuffer(GL_ARRAY_BUFFER, square->GetVertexBufferID()); // Determina o tipo do objeto de buffer
+    glBufferData(GL_ARRAY_BUFFER, square->GetVertexBufferSize() * sizeof(float), square->GetVertexArray(), GL_STATIC_DRAW); // Determina o tipo, tamanho, ponteiro e padrao de armazenamento respectivamente
     
     glEnableVertexAttribArray(VERTEX_SHADER_POSITION); // Habilita o atributo a ser usado na chamada do metodo draw
     glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // Define uma array a ser usada no attributo do vertex shader
@@ -86,9 +85,10 @@ int main(void)
 
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, square->GetIndexBufferSize() * sizeof(unsigned int), square->GetIndexArray(), GL_STATIC_DRAW);
 
-    mat4 move(1.f);
+    mat4 move(1);
+    
     
 
     /* Loop until the user closes the window */
@@ -97,10 +97,9 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-        move = glm::translate(move, glm::vec3(.00001f, .0f, .0f));
-        glUniformMatrix4fv(movimento, 1, GL_FALSE, glm::value_ptr(move));
+        glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, nullptr);
+        
+        //glUniformMatrix4fv(movimento, 1, GL_FALSE, glm::value_ptr(move));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

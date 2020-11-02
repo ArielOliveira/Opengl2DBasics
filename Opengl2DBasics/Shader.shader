@@ -2,11 +2,10 @@
 #version 330
 
 in vec4 position;
-uniform mat4 movimento;
 
 void main()
 {
-	gl_Position = position * movimento;
+	gl_Position = position;
 }
 
 #shader fragment

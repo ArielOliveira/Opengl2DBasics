@@ -10,21 +10,14 @@ class Object {
 		glm::mat4 position;
 		glm::mat4 rotation;
 		glm::mat4 scale;
-
-		unsigned buffer;
-
 	public:
 		static int instances;
 
-		Object(float const& verts, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
+		Object(glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 
 		Object(Object const& object);
 
 		~Object();
-
-		virtual float* GetVertices() = 0;
-
-		virtual unsigned int* GetIndices() = 0;
 
 		void Translate(glm::vec3 const& translation);
 		
@@ -32,6 +25,16 @@ class Object {
 
 		void Scale(glm::vec3 const& _scale);
 
-		glm::mat4 GetModel();
+		glm::mat4 GetTransform();
+
+		virtual float* GetVertexArray() = 0;
+		virtual unsigned int* GetIndexArray() = 0;
+
+		virtual const int GetVertexBufferSize() = 0;
+		virtual const int GetIndexBufferSize() = 0;
+		virtual unsigned int* GetVertexPtr() = 0;
+		virtual unsigned int* GetIndexPtr() = 0;
+		virtual unsigned int GetVertexBufferID() = 0;
+		virtual unsigned int GetIndexBufferID() = 0;
 };
 

@@ -1,12 +1,11 @@
 #include "Object.h"
 
-Object::Object(float const& verts, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
+Object::Object(glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
 	instances++;
 	this->transform = transform;
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;
-	this->buffer = instances;
 }
 
 Object::Object(Object const& object) {
@@ -15,7 +14,6 @@ Object::Object(Object const& object) {
 	position = object.position;
 	rotation = object.rotation;
 	scale = object.scale;
-	buffer = instances;
 }
 
 Object::~Object() {
@@ -39,4 +37,4 @@ void Object::Scale(glm::vec3 const& _scale) {
 	transform = transform * scale;
 }
 
-glm::mat4 Object::GetModel() { return transform; }
+glm::mat4 Object::GetTransform() { return transform; }
