@@ -22,19 +22,19 @@ Object::~Object() {
 
 void Object::Translate(glm::vec3 const& translation) {
 	position = glm::translate(glm::mat4(1.f), translation);
-	transform = transform * position;
+	transform = position * transform;
 }
 
 void Object::Rotate(glm::vec2 const& degrees, glm::vec3 const& direction) {
 	glm::mat4 rotationX = glm::rotate(position, degrees.y, direction);
 	glm::mat4 rotationY = glm::rotate(rotationX, degrees.x, direction);
 	rotation = rotationY;
-	transform = transform * rotation;
+	transform = rotation * transform;
 }
 
 void Object::Scale(glm::vec3 const& _scale) {
 	scale = glm::scale(glm::mat4(1.f), _scale);
-	transform = transform * scale;
+	transform = scale * transform;
 }
 
 glm::mat4 Object::GetTransform() { return transform; }

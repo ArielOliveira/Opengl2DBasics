@@ -17,8 +17,8 @@ class Square : public Object {
 		float* GetVertexArray();
 		unsigned int* GetIndexArray();
 
-		const int GetVertexBufferSize();
-		const int GetIndexBufferSize();
+		const unsigned int GetVertexBufferSize();
+		const unsigned int GetIndexBufferSize();
 		
 		virtual unsigned int* GetVertexPtr();
 		virtual unsigned int* GetIndexPtr();

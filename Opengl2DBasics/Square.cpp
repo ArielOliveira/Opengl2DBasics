@@ -17,8 +17,8 @@ Square::Square(Object const& object, Square const& square) : Object(object) {
 float* Square::GetVertexArray() { return verts; }
 unsigned int* Square::GetIndexArray() { return indices; }
 
-const int Square::GetVertexBufferSize() { return 8; }
-const int Square::GetIndexBufferSize() { return 6; }
+const unsigned int Square::GetVertexBufferSize() { return 8 * sizeof(float); }
+const unsigned int Square::GetIndexBufferSize() { return 6 * sizeof(unsigned int); }
 unsigned int* Square::GetVertexPtr() { return &vertexBuffer; }
 unsigned int* Square::GetIndexPtr() { return &indexBuffer; }
 unsigned int Square::GetVertexBufferID() { return vertexBuffer; }

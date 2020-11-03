@@ -30,8 +30,8 @@ class Object {
 		virtual float* GetVertexArray() = 0;
 		virtual unsigned int* GetIndexArray() = 0;
 
-		virtual const int GetVertexBufferSize() = 0;
-		virtual const int GetIndexBufferSize() = 0;
+		virtual const unsigned int GetVertexBufferSize() = 0;
+		virtual const unsigned int GetIndexBufferSize() = 0;
 		virtual unsigned int* GetVertexPtr() = 0;
 		virtual unsigned int* GetIndexPtr() = 0;
 		virtual unsigned int GetVertexBufferID() = 0;
