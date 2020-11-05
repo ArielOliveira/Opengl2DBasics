@@ -5,26 +5,14 @@ class Square : public Object {
 	private:
 		float verts[8];
 		unsigned int indices[6];
-
-		unsigned int vertexBuffer;
-		unsigned int indexBuffer;
-
 	public:
 		Square(float const* verts, unsigned const* indices, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 
-		Square(Object const& object, Square const& square);
+		Square(Square const& square);
+
+		void GenBuffer();
 
 		float* GetVertexArray();
-		unsigned int* GetIndexArray();
-
-		const unsigned int GetVertexBufferSize();
-		const unsigned int GetIndexBufferSize();
-		
-		virtual unsigned int* GetVertexPtr();
-		virtual unsigned int* GetIndexPtr();
-		virtual unsigned int GetVertexBufferID();
-		virtual unsigned int GetIndexBufferID();
-
-		
+		unsigned int* GetIndexArray();	
 };
 

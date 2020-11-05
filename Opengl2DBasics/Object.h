@@ -2,14 +2,29 @@
 
 #include <glm.hpp>
 #include <ext.hpp>
+#include <glew.h>
+
+#include "CompiladorShader.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 class Object {
-	private:
+	protected:
 		glm::mat4 transform;
 
 		glm::mat4 position;
 		glm::mat4 rotation;
 		glm::mat4 scale;
+
+		unsigned int vao;
+
+		unsigned int verticesNumber;
+		unsigned int indicesNumber;
+
+		VertexBuffer *vertexBuffer;
+		IndexBuffer *indexBuffer;
+
+		virtual void GenBuffer();
 	public:
 		static int instances;
 
@@ -19,6 +34,8 @@ class Object {
 
 		~Object();
 
+		void Bind();
+
 		void Translate(glm::vec3 const& translation);
 		
 		void Rotate(glm::vec2 const& degrees, glm::vec3 const& direction);
@@ -27,14 +44,10 @@ class Object {
 
 		glm::mat4 GetTransform();
 
+		unsigned int GetVertsNumber() const { return verticesNumber * VERTEX_BUFFER_SIZE; }
+		unsigned int GetIndexNumber() const { return indicesNumber; }
+
 		virtual float* GetVertexArray() = 0;
 		virtual unsigned int* GetIndexArray() = 0;
-
-		virtual const unsigned int GetVertexBufferSize() = 0;
-		virtual const unsigned int GetIndexBufferSize() = 0;
-		virtual unsigned int* GetVertexPtr() = 0;
-		virtual unsigned int* GetIndexPtr() = 0;
-		virtual unsigned int GetVertexBufferID() = 0;
-		virtual unsigned int GetIndexBufferID() = 0;
 };
 

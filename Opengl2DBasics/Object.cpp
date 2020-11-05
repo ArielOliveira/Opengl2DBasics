@@ -2,7 +2,7 @@
 
 Object::Object(glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
 	instances++;
-	this->transform = transform;
+	this->transform = scale * rotation * position;
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;
@@ -19,6 +19,13 @@ Object::Object(Object const& object) {
 Object::~Object() {
 	instances--;
 }
+
+void Object::GenBuffer() {
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+}
+
+void Object::Bind() { glBindVertexArray(vao); }
 
 void Object::Translate(glm::vec3 const& translation) {
 	position = glm::translate(glm::mat4(1.f), translation);
