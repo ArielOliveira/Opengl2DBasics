@@ -1,8 +1,8 @@
 #include "Object.h"
 
-Object::Object(glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
+Object::Object(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
 	instances++;
-	this->transform = scale * rotation * position;
+	this->transform = position * rotation * scale;
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;

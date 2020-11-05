@@ -28,7 +28,7 @@ class Object {
 	public:
 		static int instances;
 
-		Object(glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
+		Object(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 
 		Object(Object const& object);
 
@@ -36,18 +36,17 @@ class Object {
 
 		void Bind();
 
-		void Translate(glm::vec3 const& translation);
+		virtual void Translate(glm::vec3 const& translation);
 		
-		void Rotate(glm::vec2 const& degrees, glm::vec3 const& direction);
+		virtual void Rotate(glm::vec2 const& degrees, glm::vec3 const& direction);
 
-		void Scale(glm::vec3 const& _scale);
+		virtual void Scale(glm::vec3 const& _scale);
 
 		glm::mat4 GetTransform();
 
 		unsigned int GetVertsNumber() const { return verticesNumber * VERTEX_BUFFER_SIZE; }
 		unsigned int GetIndexNumber() const { return indicesNumber; }
 
-		virtual float* GetVertexArray() = 0;
-		virtual unsigned int* GetIndexArray() = 0;
+		virtual void Draw(const unsigned int& uniform) = 0;
 };
 

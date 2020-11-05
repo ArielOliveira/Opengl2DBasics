@@ -1,15 +1,9 @@
 #include "Square.h"
 
-Square::Square(float const* verts, unsigned const* indices, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) :
-	Object(transform, position, rotation, scale) {
+Square::Square(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) :
+	Object(position, rotation, scale) {
 	verticesNumber = 4;
 	indicesNumber = 6;
-
-	for (int i = 0; i < verticesNumber * VERTEX_BUFFER_SIZE; i++)
-		this->verts[i] = verts[i];
-
-	for (int i = 0; i < indicesNumber; i++)
-		this->indices[i] = indices[i];
 
 	GenBuffer();
 }
@@ -17,12 +11,6 @@ Square::Square(float const* verts, unsigned const* indices, glm::mat4 const& tra
 Square::Square(Square const& square) : Object(square) {
 	verticesNumber = 4;
 	indicesNumber = 6;
-
-	for (int i = 0; i < verticesNumber * VERTEX_BUFFER_SIZE; i++)
-		this->verts[i] = square.verts[i];
-
-	for (int i = 0; i < indicesNumber; i++)
-		this->indices[i] = square.indices[i];
 
 	GenBuffer();
 }
@@ -35,5 +23,7 @@ void Square::GenBuffer() {
 	indexBuffer = new IndexBuffer(indices, indicesNumber * sizeof(unsigned int));
 }
 
-float* Square::GetVertexArray() { return verts; }
-unsigned int* Square::GetIndexArray() { return indices; }
+void Square::Draw(const unsigned int& uniform) { 
+	glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform));
+	glDrawElements(GL_LINE_LOOP, indicesNumber, GL_UNSIGNED_INT, nullptr); 
+}

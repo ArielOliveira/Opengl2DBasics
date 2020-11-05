@@ -3,16 +3,24 @@
 
 class Square : public Object {
 	private:
-		float verts[8];
-		unsigned int indices[6];
+		float verts[8] = {
+		-.5f, -.5f,
+		 .5f, -.5f,
+		 .5f,  .5f,
+		-.5f,  .5f
+		};
+
+		unsigned indices[6] = {
+			 0, 1, 2,
+			 2, 3, 0
+		};
 	public:
-		Square(float const* verts, unsigned const* indices, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
+		Square(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 
 		Square(Square const& square);
 
 		void GenBuffer();
 
-		float* GetVertexArray();
-		unsigned int* GetIndexArray();	
+		void Draw(const unsigned int& uniform);
 };
 

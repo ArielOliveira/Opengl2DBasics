@@ -4,9 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "Object.h"
-#include "Square.h"
-#include "Circle.h"
+#include "Dice.h"
 #include "CompiladorShader.h"
 
 #include "VertexBuffer.h"
@@ -55,24 +53,26 @@ int main(void)
     
     if (!shader)
         return -1;
+    std::vector<Dice*> *dices = new std::vector<Dice*>();
 
-    float verts[] = {
-        -.5f, -.5f,
-         .5f, -.5f,
-         .5f,  .5f,
-        -.5f,  .5f
-    };
+    dices->push_back(new Dice(1, glm::translate(mat4(1), vec3(.25f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dices->push_back(new Dice(2, glm::translate(mat4(1), vec3(.745f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dices->push_back(new Dice(3, glm::translate(mat4(1), vec3(.25f, .5, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dices->push_back(new Dice(4, glm::translate(mat4(1), vec3(.25f, -.5f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dices->push_back(new Dice(5, glm::translate(mat4(1), vec3(-.25f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dices->push_back(new Dice(6, glm::translate(mat4(1), vec3(-.745f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
 
-    unsigned int indices[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+        for (std::vector<Dice*>::iterator it = dices->begin(); it != dices->end(); it++) {
+            (*it)->Bind();
+            (*it)->Draw(movimento);
+        }
+
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

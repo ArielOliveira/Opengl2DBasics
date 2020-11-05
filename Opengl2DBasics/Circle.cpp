@@ -1,7 +1,7 @@
 #include "Circle.h"
 
-Circle::Circle(const float& radius, glm::mat4 const& transform, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) : 
-Object(transform, position, rotation, scale) {
+Circle::Circle(const float& radius, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) : 
+Object(position, rotation, scale) {
 	verticesNumber = sides + 2;
 	indicesNumber = sides * 3;
 	this->radius = radius;
@@ -53,5 +53,8 @@ void Circle::GenBuffer() {
 	glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	indexBuffer = new IndexBuffer(indices, indicesNumber * sizeof(unsigned int));
 }
-float* Circle::GetVertexArray() { return verts; }
-unsigned int* Circle::GetIndexArray() { return indices; }
+
+void Circle::Draw(const unsigned int& uniform) { 
+	glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform));
+	glDrawElements(GL_TRIANGLE_FAN, indicesNumber, GL_UNSIGNED_INT, nullptr); 
+}

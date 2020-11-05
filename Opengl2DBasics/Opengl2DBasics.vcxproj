@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Dice.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="Circle.h" />
     <ClInclude Include="CompiladorShader.h" />
+    <ClInclude Include="Dice.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Square.h" />
