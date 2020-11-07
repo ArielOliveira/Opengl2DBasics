@@ -5,6 +5,7 @@
 #include <glew.h>
 
 #include "CompiladorShader.h"
+#include "OpenglDebugger.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
@@ -41,6 +42,10 @@ class Object {
 		virtual void Rotate(glm::vec2 const& degrees, glm::vec3 const& direction);
 
 		virtual void Scale(glm::vec3 const& _scale);
+
+		glm::mat4 GetPosition();
+		glm::mat4 GetRotation();
+		glm::mat4 GetScale();
 
 		glm::mat4 GetTransform();
 

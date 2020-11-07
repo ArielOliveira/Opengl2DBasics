@@ -1,5 +1,7 @@
 #include "IndexBuffer.h"
 
+#include <iostream>
+
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) {
     this->count = count;
 

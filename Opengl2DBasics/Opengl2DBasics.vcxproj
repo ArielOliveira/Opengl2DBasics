@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle.cpp" />
-    <ClCompile Include="Dice.cpp" />
+    <ClCompile Include="DiceFace.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -28,9 +29,11 @@
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OpenglDebugger.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="CompiladorShader.h" />
-    <ClInclude Include="Dice.h" />
+    <ClInclude Include="DiceFace.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Square.h" />

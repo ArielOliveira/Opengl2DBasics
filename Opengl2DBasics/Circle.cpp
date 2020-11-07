@@ -25,6 +25,10 @@ Circle::Circle(const Circle& circle) : Object(circle) {
 	GenBuffer();
 }
 
+Circle::~Circle() {
+	
+}
+
 void Circle::Fill() {
 	double radians = 2 * 3.14159265359;
 	float centerX = verts[0];
@@ -48,13 +52,14 @@ void Circle::Fill() {
 
 void Circle::GenBuffer() {
 	Object::GenBuffer();
-	glEnableVertexAttribArray(VERTEX_SHADER_POSITION);
+	GLCall(glEnableVertexAttribArray(VERTEX_SHADER_POSITION));
 	vertexBuffer = new VertexBuffer(verts, (verticesNumber * VERTEX_BUFFER_SIZE) * sizeof(float));
-	glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	GLCall(glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
 	indexBuffer = new IndexBuffer(indices, indicesNumber * sizeof(unsigned int));
 }
 
 void Circle::Draw(const unsigned int& uniform) { 
-	glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform));
-	glDrawElements(GL_TRIANGLE_FAN, indicesNumber, GL_UNSIGNED_INT, nullptr); 
+	GLCall(glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform)));
+	GLCall(glDrawElements(GL_TRIANGLE_FAN, indicesNumber, GL_UNSIGNED_INT, nullptr) );
+	
 }

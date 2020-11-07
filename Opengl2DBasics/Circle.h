@@ -13,6 +13,7 @@ class Circle : public Object {
 	public:
 		Circle(const float& radius, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 		Circle(const Circle& circle);
+		~Circle();
 
 		void Draw(const unsigned int& uniform);
 };

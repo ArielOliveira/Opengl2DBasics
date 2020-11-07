@@ -1,6 +1,6 @@
-#include "Dice.h"
+#include "DiceFace.h"
 
-Dice::Dice(int const& diceNumber, mat4 const& position, mat4 const& rotation, mat4 const& scale) :
+DiceFace::DiceFace(int const& diceNumber, mat4 const& position, mat4 const& rotation, mat4 const& scale) :
 	Object(position, rotation, scale) {
 	this->diceNumber = diceNumber;
 	square = new Square(position, rotation, scale);
@@ -8,15 +8,22 @@ Dice::Dice(int const& diceNumber, mat4 const& position, mat4 const& rotation, ma
 	FillDice();
 }
 
-Dice::Dice(Dice const& dice) : Object(dice) {
-	diceNumber = dice.diceNumber;
+DiceFace::DiceFace(DiceFace const& face) : Object(face) {
+	diceNumber = face.diceNumber;
 	square = new Square(position, rotation, scale);
 	circles = new vector<Circle*>();
-	for (vector<Circle*>::iterator it = circles->begin(); it != dice.circles->end(); it++)
-		circles->push_back(new Circle(**it));
+	FillDice();
 }
 
-void Dice::FillDice() {
+DiceFace::~DiceFace() {
+	delete square;
+	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++)
+		delete *it;
+
+	delete circles;
+}
+
+void DiceFace::FillDice() {
 	if (diceNumber == 1 || diceNumber == 3 || diceNumber == 5)
 		circles->push_back(new Circle(0.05f, position, rotation, scale));
 	if (diceNumber >= 2) {
@@ -27,14 +34,13 @@ void Dice::FillDice() {
 		circles->push_back(new Circle(0.05f, glm::translate(transform, glm::vec3(dicePos[2], dicePos[2], .0f)), rotation, scale));
 		circles->push_back(new Circle(0.05f, glm::translate(transform, glm::vec3(dicePos[3], dicePos[3], .0f)), rotation, scale));
 	}
-
 	if (diceNumber == 6) {
 		circles->push_back(new Circle(0.05f, glm::translate(transform, glm::vec3(dicePos[2], dicePos[0], .0f)), rotation, scale));
 		circles->push_back(new Circle(0.05f, glm::translate(transform, glm::vec3(dicePos[3], dicePos[0], .0f)), rotation, scale));
 	}
 }
 
-void Dice::Translate(glm::vec3 const& translation) {
+void DiceFace::Translate(glm::vec3 const& translation) {
 	Object::Translate(translation);
 
 	square->Translate(translation);
@@ -42,7 +48,7 @@ void Dice::Translate(glm::vec3 const& translation) {
 		(*it)->Translate(translation);
 }
 
-void Dice::Scale(glm::vec3 const& _scale) {
+void DiceFace::Scale(glm::vec3 const& _scale) {
 	Object::Scale(_scale);
 
 	square->Scale(_scale);
@@ -50,12 +56,12 @@ void Dice::Scale(glm::vec3 const& _scale) {
 		(*it)->Scale(_scale);
 }
 
-void Dice::Bind() {
+void DiceFace::Bind() {
 	Object::Bind();
 	square->Bind();
 }
 
-void Dice::Draw(const unsigned int& uniform) {
+void DiceFace::Draw(const unsigned int& uniform) {
 	square->Draw(uniform);
 
 	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++) {

@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Dice.h"
+#include "DiceFace.h"
+#include "Camera.h"
 #include "CompiladorShader.h"
 
 #include "VertexBuffer.h"
@@ -14,7 +15,73 @@ int Object::instances = 0;
 
 using glm::mat4;
 using glm::translate;
+using glm::vec2;
 using glm::vec3;
+using glm::vec4;
+
+vector<DiceFace*>* dice;
+Camera* camera;
+Camera* cameraDolly;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    vec4 facePos;
+    vec4 cameraPos;
+    vec4 travelDistance;
+    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+        camera->Translate(vec3(.5f, .0f, .0f));
+    if (key == GLFW_KEY_B && action == GLFW_PRESS)
+        camera->Translate(vec3(.0f, .5f, .0f));
+    if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+        camera->Reset();
+        cameraDolly->Reset();
+    }
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        facePos = dice->at(0)->GetPosition() * vec4(0, 0, 0, 1);
+        cameraPos = camera->GetPosition() * vec4(0, 0, 0, 1);
+
+        travelDistance = (facePos * -1.f) - cameraPos;
+        glm::normalize(travelDistance);
+
+        std::cout << "DicePos " << facePos.x << " " << facePos.y << std::endl;
+        std::cout << "CameraPos " << cameraPos.x << " " << cameraPos.y << std::endl;
+        std::cout << "Displacement " << travelDistance.x << " " << travelDistance.y << std::endl;
+
+        camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
+        cameraDolly->Scale(vec3(1.2f, 1.2f, 1));
+    }
+    if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+        facePos = (*dice)[4]->GetPosition() * vec4(0, 0, 0, 1);
+        cameraPos = camera->GetPosition() * vec4(0, 0, 0, 1);
+
+        travelDistance = (facePos * -1.f) - cameraPos;
+        glm::normalize(travelDistance);
+
+        std::cout << "DicePos " << facePos.x << " " << facePos.y << std::endl;
+        std::cout << "CameraPos " << cameraPos.x << " " << cameraPos.y << std::endl;
+        std::cout << "Displacement " << travelDistance.x << " " << travelDistance.y << std::endl;
+
+        camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
+        cameraDolly->Scale(vec3(.5f, .5f, 1));
+    }
+    if (key == GLFW_KEY_F && action == GLFW_PRESS) {
+        facePos = (*dice)[0]->GetPosition() * camera->GetScale() * vec4(0, 0, 0, 1);
+        cameraPos = camera->GetPosition() * vec4(0, 0, 0, 1);
+
+        travelDistance = (facePos * -1.f) - cameraPos;
+        glm::normalize(travelDistance);
+
+        camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
+        cameraDolly->Rotate(vec2(0.f, 90.f), vec3(0, 0, -1));
+    }
+    if (key == GLFW_KEY_G && action == GLFW_PRESS) {
+        vector<DiceFace*>::iterator it = dice->begin();
+        (*++it)->Translate(vec3(.5f, 0, 0));
+        (*++it)->Translate(vec3(0, .5f, 0));
+        (*++it)->Translate(vec3(0, -.5f, 0));
+        (*++it)->Translate(vec3(-.5f, 0, 0));
+        (*++it)->Translate(vec3(-.5f, 0, 0));
+    }
+}
 
 int main(void) 
 {
@@ -45,34 +112,41 @@ int main(void)
 
     ShaderProgramSource source = ParseShader("Shader.shader");
     unsigned shader = CriarShader(source.VertexSource, source.FragmentSource);
-    glUseProgram(shader);
+    GLCall(glUseProgram(shader));
 
-    glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position");  // Associa um número a um atributo no vertex shader
-    unsigned movimento = glGetUniformLocation(shader, "transform"); // Retorna o valor unsigned int de um uniform
-   
+    GLCall(glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position"));  // Associa um número a um atributo no vertex shader
+    GLCall(unsigned int movimento = glGetUniformLocation(shader, "transform"));
+    GLCall(unsigned int viewParent = glGetUniformLocation(shader, "cameraParent"));
+    GLCall(unsigned int view = glGetUniformLocation(shader, "camera"));
     
     if (!shader)
         return -1;
-    std::vector<Dice*> *dices = new std::vector<Dice*>();
 
-    dices->push_back(new Dice(1, glm::translate(mat4(1), vec3(.25f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
-    dices->push_back(new Dice(2, glm::translate(mat4(1), vec3(.745f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
-    dices->push_back(new Dice(3, glm::translate(mat4(1), vec3(.25f, .5, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
-    dices->push_back(new Dice(4, glm::translate(mat4(1), vec3(.25f, -.5f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
-    dices->push_back(new Dice(5, glm::translate(mat4(1), vec3(-.25f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
-    dices->push_back(new Dice(6, glm::translate(mat4(1), vec3(-.745f, .0f, .0f)), mat4(1), glm::scale(mat4(1), vec3(.5f, .5f, 1))));
+    dice = new vector<DiceFace*>();
+    dice->push_back(new DiceFace(1, mat4(1), mat4(1), mat4(1)));
+    dice->push_back(new DiceFace(2, translate(mat4(1), vec3(1, .0f, .0f)), mat4(1), mat4(1)));
+    dice->push_back(new DiceFace(3, translate(mat4(1), vec3(.0, 1, .0f)), mat4(1), mat4(1)));
+    dice->push_back(new DiceFace(4, translate(mat4(1), vec3(.0, -1, .0f)), mat4(1), mat4(1)));
+    dice->push_back(new DiceFace(5, translate(mat4(1), vec3(-1, 0, .0f)), mat4(1), mat4(1)));
+    dice->push_back(new DiceFace(6, translate(mat4(1), vec3(-2, 0, .0f)), mat4(1), mat4(1)));
+
+    camera = new Camera(translate(mat4(1), vec3(.5f, .0f, .0f)), mat4(1), mat4(1));
+    cameraDolly = new Camera(mat4(1), mat4(1), scale(mat4(1), vec3(.5f, .5f, 1)));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        //Entrada/Input
+        glfwSetKeyCallback(window, key_callback);
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-
-        for (std::vector<Dice*>::iterator it = dices->begin(); it != dices->end(); it++) {
+        cameraDolly->Draw(viewParent);
+        camera->Draw(view);
+        for (std::vector<DiceFace*>::iterator it = dice->begin(); it != dice->end(); it++) {
             (*it)->Bind();
             (*it)->Draw(movimento);
         }
-
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -80,7 +154,20 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-    glDeleteProgram(shader);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    std::cout << Object::instances << std::endl;
+    for (std::vector<DiceFace*>::iterator it = dice->begin(); it != dice->end(); it++)
+        delete *it;
+
+    delete dice;
+    delete camera;
+    delete cameraDolly;
+
+    std::cout << Object::instances << std::endl;
+    GLCall(glDeleteProgram(shader));
     glfwTerminate();
     return 0;
 }

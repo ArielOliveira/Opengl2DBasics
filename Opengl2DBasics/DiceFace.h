@@ -10,7 +10,7 @@ using std::vector;
 
 using glm::mat4;
 
-class Dice : public Object {
+class DiceFace : public Object {
 	private:
         const float dicePos[4] = {
             .0f,   .0f,
@@ -21,11 +21,10 @@ class Dice : public Object {
 		vector<Circle*>* circles;
 
         void FillDice();
-
-        int diceNumber;
     public:
-        Dice(int const& diceNumber, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
-        Dice(Dice const& dice);
+        DiceFace(int const& diceNumber, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
+        DiceFace(DiceFace const& face);
+        ~DiceFace();
 
         void Bind();
         void Draw(const unsigned int& uniform);
@@ -33,5 +32,7 @@ class Dice : public Object {
         void Translate(glm::vec3 const& translation);
 
         void Scale(glm::vec3 const& _scale);
+
+        int diceNumber;
 };
 

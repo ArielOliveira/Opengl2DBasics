@@ -2,10 +2,17 @@
 
 Object::Object(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale) {
 	instances++;
+
 	this->transform = position * rotation * scale;
 	this->position = position;
 	this->rotation = rotation;
 	this->scale = scale;
+
+	vertexBuffer = nullptr;
+	indexBuffer = nullptr;
+
+	verticesNumber = 0;
+	indicesNumber = 0;
 }
 
 Object::Object(Object const& object) {
@@ -14,10 +21,18 @@ Object::Object(Object const& object) {
 	position = object.position;
 	rotation = object.rotation;
 	scale = object.scale;
+
+	vertexBuffer = object.vertexBuffer;
+	indexBuffer = object.indexBuffer;
+
+	verticesNumber = object.verticesNumber;
+	indicesNumber = object.indicesNumber;
 }
 
 Object::~Object() {
 	instances--;
+	delete vertexBuffer;
+	delete indexBuffer;
 }
 
 void Object::GenBuffer() {
@@ -25,11 +40,12 @@ void Object::GenBuffer() {
 	glBindVertexArray(vao);
 }
 
-void Object::Bind() { glBindVertexArray(vao); }
+void Object::Bind() { GLCall(glBindVertexArray(vao)); }
 
 void Object::Translate(glm::vec3 const& translation) {
-	position = glm::translate(glm::mat4(1.f), translation);
-	transform = position * transform;
+	glm::mat4 displacement = glm::translate(glm::mat4(1.f), translation);
+	position = displacement * position;
+	transform = displacement * transform;
 }
 
 void Object::Rotate(glm::vec2 const& degrees, glm::vec3 const& direction) {
@@ -40,8 +56,12 @@ void Object::Rotate(glm::vec2 const& degrees, glm::vec3 const& direction) {
 }
 
 void Object::Scale(glm::vec3 const& _scale) {
-	scale = glm::scale(glm::mat4(1.f), _scale);
-	transform = scale * transform;
+	glm::mat4 newScale = glm::scale(glm::mat4(1.f), _scale);
+	scale = newScale * scale;
+	transform = newScale * transform;
 }
 
+glm::mat4 Object::GetPosition() { return position; }
+glm::mat4 Object::GetRotation() { return rotation; }
+glm::mat4 Object::GetScale() { return scale; }
 glm::mat4 Object::GetTransform() { return transform; }

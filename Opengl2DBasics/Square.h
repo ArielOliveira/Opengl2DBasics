@@ -16,8 +16,8 @@ class Square : public Object {
 		};
 	public:
 		Square(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
-
 		Square(Square const& square);
+		~Square();
 
 		void GenBuffer();
 

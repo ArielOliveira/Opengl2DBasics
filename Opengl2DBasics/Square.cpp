@@ -15,6 +15,9 @@ Square::Square(Square const& square) : Object(square) {
 	GenBuffer();
 }
 
+Square::~Square() {
+}
+
 void Square::GenBuffer() {
 	Object::GenBuffer();
 	glEnableVertexAttribArray(VERTEX_SHADER_POSITION);
@@ -24,6 +27,6 @@ void Square::GenBuffer() {
 }
 
 void Square::Draw(const unsigned int& uniform) { 
-	glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform));
-	glDrawElements(GL_LINE_LOOP, indicesNumber, GL_UNSIGNED_INT, nullptr); 
+	GLCall(glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform)));
+	GLCall(glDrawElements(GL_LINE_LOOP, indicesNumber, GL_UNSIGNED_INT, nullptr)); 
 }
