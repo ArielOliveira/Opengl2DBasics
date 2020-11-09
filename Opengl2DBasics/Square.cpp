@@ -16,15 +16,22 @@ Square::Square(Square const& square) : Object(square) {
 }
 
 Square::~Square() {
+	delete vertexBuffer;
+	delete indexBuffer;
+	delete vao;
+	delete layout;
 }
 
 void Square::GenBuffer() {
-	Object::GenBuffer();
-	glEnableVertexAttribArray(VERTEX_SHADER_POSITION);
+	vao = new VertexArray();
+	layout = new VertexBufferLayout();
+	layout->Push<float>(VERTEX_BUFFER_SIZE);
 	vertexBuffer = new VertexBuffer(verts, (verticesNumber * VERTEX_BUFFER_SIZE) * sizeof(float));
-	glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	vao->AddBuffer(*vertexBuffer, *layout);
 	indexBuffer = new IndexBuffer(indices, indicesNumber * sizeof(unsigned int));
 }
+
+void Square::Bind() { vao->Bind(); }
 
 void Square::Draw(const unsigned int& uniform) { 
 	GLCall(glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform)));

@@ -26,6 +26,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Square.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -37,7 +38,9 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Square.h" />
+    <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader.shader" />

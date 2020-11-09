@@ -5,9 +5,9 @@
 #include <glew.h>
 
 #include "CompiladorShader.h"
-#include "OpenglDebugger.h"
-#include "VertexBuffer.h"
+#include "VertexArray.h"
 #include "IndexBuffer.h"
+
 
 class Object {
 	protected:
@@ -17,15 +17,8 @@ class Object {
 		glm::mat4 rotation;
 		glm::mat4 scale;
 
-		unsigned int vao;
-
 		unsigned int verticesNumber;
 		unsigned int indicesNumber;
-
-		VertexBuffer *vertexBuffer;
-		IndexBuffer *indexBuffer;
-
-		virtual void GenBuffer();
 	public:
 		static int instances;
 
@@ -34,8 +27,6 @@ class Object {
 		Object(Object const& object);
 
 		~Object();
-
-		void Bind();
 
 		virtual void Translate(glm::vec3 const& translation);
 		

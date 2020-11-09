@@ -6,10 +6,6 @@
 
 #include "DiceFace.h"
 #include "Camera.h"
-#include "CompiladorShader.h"
-
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
 
 int Object::instances = 0;
 
@@ -40,25 +36,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         cameraPos = camera->GetPosition() * vec4(0, 0, 0, 1);
 
         travelDistance = (facePos * -1.f) - cameraPos;
-        glm::normalize(travelDistance);
-
-        std::cout << "DicePos " << facePos.x << " " << facePos.y << std::endl;
-        std::cout << "CameraPos " << cameraPos.x << " " << cameraPos.y << std::endl;
-        std::cout << "Displacement " << travelDistance.x << " " << travelDistance.y << std::endl;
 
         camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
         cameraDolly->Scale(vec3(1.2f, 1.2f, 1));
     }
     if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-        facePos = (*dice)[4]->GetPosition() * vec4(0, 0, 0, 1);
+        facePos = (*dice)[5]->GetPosition() * vec4(0, 0, 0, 1);
         cameraPos = camera->GetPosition() * vec4(0, 0, 0, 1);
 
         travelDistance = (facePos * -1.f) - cameraPos;
-        glm::normalize(travelDistance);
-
-        std::cout << "DicePos " << facePos.x << " " << facePos.y << std::endl;
-        std::cout << "CameraPos " << cameraPos.x << " " << cameraPos.y << std::endl;
-        std::cout << "Displacement " << travelDistance.x << " " << travelDistance.y << std::endl;
 
         camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
         cameraDolly->Scale(vec3(.5f, .5f, 1));
@@ -71,7 +57,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glm::normalize(travelDistance);
 
         camera->Translate(vec3(travelDistance.x, travelDistance.y, .0f));
-        cameraDolly->Rotate(vec2(0.f, 90.f), vec3(0, 0, -1));
+        cameraDolly->Rotate(vec2(0.f, 45.f), vec3(0, 0, 1));
     }
     if (key == GLFW_KEY_G && action == GLFW_PRESS) {
         vector<DiceFace*>::iterator it = dice->begin();
@@ -143,9 +129,9 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         cameraDolly->Draw(viewParent);
         camera->Draw(view);
-        for (std::vector<DiceFace*>::iterator it = dice->begin(); it != dice->end(); it++) {
-            (*it)->Bind();
-            (*it)->Draw(movimento);
+        for (auto& diceFace : *dice) {
+            (diceFace)->Bind();
+            (diceFace)->Draw(movimento);
         }
 
         /* Swap front and back buffers */
@@ -159,8 +145,8 @@ int main(void)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     std::cout << Object::instances << std::endl;
-    for (std::vector<DiceFace*>::iterator it = dice->begin(); it != dice->end(); it++)
-        delete *it;
+    for (auto& diceFace : *dice)
+        delete diceFace;
 
     delete dice;
     delete camera;

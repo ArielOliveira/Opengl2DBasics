@@ -26,7 +26,10 @@ Circle::Circle(const Circle& circle) : Object(circle) {
 }
 
 Circle::~Circle() {
-	
+	delete vertexBuffer;
+	delete indexBuffer;
+	delete vao;
+	delete layout;
 }
 
 void Circle::Fill() {
@@ -51,12 +54,15 @@ void Circle::Fill() {
 }
 
 void Circle::GenBuffer() {
-	Object::GenBuffer();
-	GLCall(glEnableVertexAttribArray(VERTEX_SHADER_POSITION));
+	vao = new VertexArray();
+	layout = new VertexBufferLayout();
+	layout->Push<float>(VERTEX_BUFFER_SIZE);
 	vertexBuffer = new VertexBuffer(verts, (verticesNumber * VERTEX_BUFFER_SIZE) * sizeof(float));
-	GLCall(glVertexAttribPointer(VERTEX_SHADER_POSITION, VERTEX_BUFFER_SIZE, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+	vao->AddBuffer(*vertexBuffer, *layout);	
 	indexBuffer = new IndexBuffer(indices, indicesNumber * sizeof(unsigned int));
 }
+
+void Circle::Bind() { vao->Bind(); }
 
 void Circle::Draw(const unsigned int& uniform) { 
 	GLCall(glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform)));

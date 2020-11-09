@@ -6,13 +6,8 @@ Camera::Camera(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 c
 	startRot = rotation;
 	startScale = scale;
 
-	vao = 0;
-
 	verticesNumber = 0;
 	indicesNumber = 0;
-
-	VertexBuffer* vertexBuffer = nullptr;
-	IndexBuffer* indexBuffer = nullptr;
 }
 
 Camera::Camera(Camera const& camera) : Object(camera) {
@@ -20,14 +15,11 @@ Camera::Camera(Camera const& camera) : Object(camera) {
 	startRot = camera.rotation;
 	startScale = camera.scale;
 
-	vao = 0;
-
 	verticesNumber = 0;
 	indicesNumber = 0;
-
-	VertexBuffer* vertexBuffer = nullptr;
-	IndexBuffer* indexBuffer = nullptr;
 }
+
+void Camera::GenBuffer() {}
 
 void Camera::Draw(const unsigned int& uniform) { GLCall(glUniformMatrix4fv(uniform, 1, GL_FALSE, glm::value_ptr(transform))); }
 

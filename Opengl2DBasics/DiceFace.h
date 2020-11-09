@@ -3,8 +3,6 @@
 #include <vector>
 using std::vector;
 
-
-#include "Object.h"
 #include "Square.h"
 #include "Circle.h"
 
@@ -21,6 +19,7 @@ class DiceFace : public Object {
 		vector<Circle*>* circles;
 
         void FillDice();
+        void GenBuffer();
     public:
         DiceFace(int const& diceNumber, glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
         DiceFace(DiceFace const& face);

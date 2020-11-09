@@ -8,9 +8,6 @@ Object::Object(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 c
 	this->rotation = rotation;
 	this->scale = scale;
 
-	vertexBuffer = nullptr;
-	indexBuffer = nullptr;
-
 	verticesNumber = 0;
 	indicesNumber = 0;
 }
@@ -22,25 +19,13 @@ Object::Object(Object const& object) {
 	rotation = object.rotation;
 	scale = object.scale;
 
-	vertexBuffer = object.vertexBuffer;
-	indexBuffer = object.indexBuffer;
-
 	verticesNumber = object.verticesNumber;
 	indicesNumber = object.indicesNumber;
 }
 
 Object::~Object() {
 	instances--;
-	delete vertexBuffer;
-	delete indexBuffer;
 }
-
-void Object::GenBuffer() {
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-}
-
-void Object::Bind() { GLCall(glBindVertexArray(vao)); }
 
 void Object::Translate(glm::vec3 const& translation) {
 	glm::mat4 displacement = glm::translate(glm::mat4(1.f), translation);

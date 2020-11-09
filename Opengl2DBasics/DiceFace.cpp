@@ -17,10 +17,13 @@ DiceFace::DiceFace(DiceFace const& face) : Object(face) {
 
 DiceFace::~DiceFace() {
 	delete square;
-	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++)
-		delete *it;
-
+	for (auto& circle : *circles)
+		delete circle;
 	delete circles;
+}
+
+void DiceFace::GenBuffer() {
+
 }
 
 void DiceFace::FillDice() {
@@ -44,28 +47,27 @@ void DiceFace::Translate(glm::vec3 const& translation) {
 	Object::Translate(translation);
 
 	square->Translate(translation);
-	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++)
-		(*it)->Translate(translation);
+	for (auto& circle : *circles)
+		(circle)->Translate(translation);
 }
 
 void DiceFace::Scale(glm::vec3 const& _scale) {
 	Object::Scale(_scale);
 
 	square->Scale(_scale);
-	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++)
-		(*it)->Scale(_scale);
+	for (auto& circle : *circles)
+		(circle)->Scale(_scale);
 }
 
 void DiceFace::Bind() {
-	Object::Bind();
 	square->Bind();
 }
 
 void DiceFace::Draw(const unsigned int& uniform) {
 	square->Draw(uniform);
 
-	for (vector<Circle*>::iterator it = circles->begin(); it != circles->end(); it++) {
-		(*it)->Bind();
-		(*it)->Draw(uniform);
+	for (auto& circle : *circles) {
+		(circle)->Bind();
+		(circle)->Draw(uniform);
 	}
 }

@@ -14,6 +14,13 @@ class Square : public Object {
 			 0, 1, 2,
 			 2, 3, 0
 		};
+
+		VertexArray* vao;
+		VertexBufferLayout* layout;
+
+		VertexBuffer* vertexBuffer;
+		IndexBuffer* indexBuffer;
+
 	public:
 		Square(glm::mat4 const& position, glm::mat4 const& rotation, glm::mat4 const& scale);
 		Square(Square const& square);
@@ -21,6 +28,7 @@ class Square : public Object {
 
 		void GenBuffer();
 
+		void Bind();
 		void Draw(const unsigned int& uniform);
 };
 

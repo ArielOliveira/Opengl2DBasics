@@ -8,6 +8,12 @@ class Circle : public Object {
 		float* verts;
 		unsigned int* indices;
 
+		VertexArray* vao;
+		VertexBufferLayout* layout;
+
+		VertexBuffer* vertexBuffer;
+		IndexBuffer* indexBuffer;
+
 		void Fill();
 		void GenBuffer();
 	public:
@@ -15,5 +21,6 @@ class Circle : public Object {
 		Circle(const Circle& circle);
 		~Circle();
 
+		void Bind();
 		void Draw(const unsigned int& uniform);
 };
