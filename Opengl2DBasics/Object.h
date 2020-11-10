@@ -4,10 +4,14 @@
 #include <ext.hpp>
 #include <glew.h>
 
-#include "CompiladorShader.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
+// Constantes para índices de attributos no vertex shader
+const unsigned VERTEX_SHADER_POSITION = 0;
+
+// Constantes para formato do buffer
+const unsigned VERTEX_BUFFER_SIZE = 2; // usaremos apenas x e y para representar os vértices
 
 class Object {
 	protected:
@@ -38,7 +42,7 @@ class Object {
 		glm::mat4 GetRotation();
 		glm::mat4 GetScale();
 
-		glm::mat4 GetTransform();
+		const float& GetTransform();
 
 		unsigned int GetVertsNumber() const { return verticesNumber * VERTEX_BUFFER_SIZE; }
 		unsigned int GetIndexNumber() const { return indicesNumber; }

@@ -6,6 +6,7 @@
 
 #include "DiceFace.h"
 #include "Camera.h"
+#include "Shader.h"
 
 int Object::instances = 0;
 
@@ -95,18 +96,10 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
+    Shader* shader = new Shader("Shader.shader");
+    shader->Bind();
 
-    ShaderProgramSource source = ParseShader("Shader.shader");
-    unsigned shader = CriarShader(source.VertexSource, source.FragmentSource);
-    GLCall(glUseProgram(shader));
-
-    GLCall(glBindAttribLocation(shader, VERTEX_SHADER_POSITION, "position"));  // Associa um número a um atributo no vertex shader
-    GLCall(unsigned int movimento = glGetUniformLocation(shader, "transform"));
-    GLCall(unsigned int viewParent = glGetUniformLocation(shader, "cameraParent"));
-    GLCall(unsigned int view = glGetUniformLocation(shader, "camera"));
-    
-    if (!shader)
-        return -1;
+    GLCall(glBindAttribLocation(shader->GetID(), VERTEX_SHADER_POSITION, "position"));  // Associa um número a um atributo no vertex shader
 
     dice = new vector<DiceFace*>();
     dice->push_back(new DiceFace(1, mat4(1), mat4(1), mat4(1)));
@@ -117,7 +110,12 @@ int main(void)
     dice->push_back(new DiceFace(6, translate(mat4(1), vec3(-2, 0, .0f)), mat4(1), mat4(1)));
 
     camera = new Camera(translate(mat4(1), vec3(.5f, .0f, .0f)), mat4(1), mat4(1));
+    shader->SetUniformMatrix4fv("camera", &camera->GetTransform());
     cameraDolly = new Camera(mat4(1), mat4(1), scale(mat4(1), vec3(.5f, .5f, 1)));
+    shader->SetUniformMatrix4fv("cameraParent", &cameraDolly->GetTransform());
+    
+    for (auto& diceFace : *dice)
+        shader->SetUniformMatrix4fv("transform", (&(diceFace)->GetTransform()));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -127,11 +125,11 @@ int main(void)
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-        cameraDolly->Draw(viewParent);
-        camera->Draw(view);
+        cameraDolly->Draw(shader->GetUniformLocation("cameraParent"));
+        camera->Draw(shader->GetUniformLocation("camera"));
         for (auto& diceFace : *dice) {
             (diceFace)->Bind();
-            (diceFace)->Draw(movimento);
+            (diceFace)->Draw(shader->GetUniformLocation("transform"));
         }
 
         /* Swap front and back buffers */
@@ -140,9 +138,6 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     std::cout << Object::instances << std::endl;
     for (auto& diceFace : *dice)
@@ -153,7 +148,8 @@ int main(void)
     delete cameraDolly;
 
     std::cout << Object::instances << std::endl;
-    GLCall(glDeleteProgram(shader));
+    shader->Unbind();
+    delete shader;
     glfwTerminate();
     return 0;
 }

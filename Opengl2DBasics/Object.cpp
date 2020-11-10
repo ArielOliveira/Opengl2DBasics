@@ -49,4 +49,4 @@ void Object::Scale(glm::vec3 const& _scale) {
 glm::mat4 Object::GetPosition() { return position; }
 glm::mat4 Object::GetRotation() { return rotation; }
 glm::mat4 Object::GetScale() { return scale; }
-glm::mat4 Object::GetTransform() { return transform; }
+const float& Object::GetTransform() { return transform[0].x; }
