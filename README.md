@@ -22,4 +22,4 @@ which can be rotated, translated or scaled by pressing a key on the keyboard.
 - Move all other faces away from face 1: key G
 
 ## Demo
- <img src="https://github.com/ArielOliveira/MazeGenerator/blob/master/demo/Dice.png" width="270" height="270">
+ <img src="https://github.com/ArielOliveira/Opengl2DBasics/blob/master/demo/Dice.png" width="270" height="270">
