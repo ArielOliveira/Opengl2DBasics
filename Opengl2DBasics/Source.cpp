@@ -7,6 +7,7 @@
 #include "DiceFace.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "Renderer.h"
 
 int Object::instances = 0;
 
@@ -99,7 +100,7 @@ int main(void)
     Shader* shader = new Shader("Shader.shader");
     shader->Bind();
 
-    GLCall(glBindAttribLocation(shader->GetID(), VERTEX_SHADER_POSITION, "position"));  // Associa um número a um atributo no vertex shader
+    Renderer* renderer = new Renderer();
 
     dice = new vector<DiceFace*>();
     dice->push_back(new DiceFace(1, mat4(1), mat4(1), mat4(1)));
@@ -146,6 +147,7 @@ int main(void)
     delete dice;
     delete camera;
     delete cameraDolly;
+    delete renderer;
 
     std::cout << Object::instances << std::endl;
     shader->Unbind();

@@ -14,7 +14,6 @@ enum class ShaderType {
 Shader::Shader(const std::string& filepath) : filePath(filepath), rendererID(0) {
 	ShaderProgramSource source = ParseShader(filepath);
 	rendererID = CreateShader(source.VertexSource, source.FragmentSource);
-    //CompileShader();
 }
 
 Shader::~Shader() {
@@ -80,18 +79,18 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 	return program;
 }
 
-void Shader::Bind() { GLCall(glUseProgram(rendererID)) }
-void Shader::Unbind() { GLCall(glUseProgram(0)); }
+void Shader::Bind() const { GLCall(glUseProgram(rendererID)) }
+void Shader::Unbind() const { GLCall(glUseProgram(0)); }
 
 void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
-	GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+	GLCall(glUniform4f(SetUniformLocation(name), v0, v1, v2, v3));
 }
 
 void Shader::SetUniformMatrix4fv(const std::string& name, const float* matrix) {
-	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, matrix));
+	GLCall(glUniformMatrix4fv(SetUniformLocation(name), 1, GL_FALSE, matrix));
 }
 
-unsigned int Shader::GetUniformLocation(const std::string& name) {
+int Shader::SetUniformLocation(const std::string& name) {
 	if (uniformLocationCache.find(name) != uniformLocationCache.end())
 		return uniformLocationCache[name];
 	GLCall(int location = glGetUniformLocation(rendererID, name.c_str()));
@@ -99,4 +98,10 @@ unsigned int Shader::GetUniformLocation(const std::string& name) {
 		std::cout << "warning: uniform '" << name << "' doesn't exist!" << std::endl;
 	uniformLocationCache[name] = location;
 	return location;
+}
+
+const int Shader::GetUniformLocation(const std::string& name) const {
+	if (uniformLocationCache.find(name) != uniformLocationCache.end())
+		return uniformLocationCache.at(name);
+	else return -1;
 }
